@@ -1,22 +1,36 @@
+name: snowflakeDemo
+profile: snowflake-demo
+version: '2.0'
 
-name: 'jaffle_shop'
-version: '0.1'
-profile: 'jaffle_shop'
-source-paths: ["models"]
-analysis-paths: ["analysis"]
-test-paths: ["tests"]
-data-paths: ["data"]
-macro-paths: ["macros"]
-
-target-path: "target"
+analysis-paths:
+- analysis
 clean-targets:
-    - "target"
-    - "dbt_modules"
-    - "logs"
+- target
+- dbt_modules
+data-paths:
+- data
+macro-paths:
+- macros
+source-paths:
+- models
+test-paths:
+- tests
+target-path: target
 
 models:
-  jaffle_shop:
-      materialized: table
-      staging:
+  snowflakeDemo:
+    load:
+      schema: "VLT"
+      enabled: true
+      materialized: incremental
+      stage:
+        schema: "STG"
+        enabled: true
         materialized: view
-        tags: ["staging", "hourly"]
+      raw:
+        schema: "RAW"
+        enabled: true
+        materialized: incremental
+  vars:
+    date: TO_DATE('1992-01-08')
+    hash: SHA # or MD5
